@@ -7,13 +7,14 @@ clc
 ly = length(y);
 t = ly / Fs;
 M = 0.5;
-lint = ly/(t/M);
+lint = Fs * M;
 
 figure
 hold on
 plot(0:ly-1, y(:, 1));
+title("Plot canzone");
 
-x = zeros(1, lint);
+x = zeros(t/M, lint);
 
 for i = 1:(t/M)
     a = (i-1)*lint+1;
@@ -23,4 +24,5 @@ end
 
 figure
 hold on
-plot(0:M/lint, x(1, :));
+plot(linspace(0, (lint-1)/Fs, lint), x(1, :));
+title("Plot primo intervallo");
