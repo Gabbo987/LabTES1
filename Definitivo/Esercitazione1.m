@@ -11,7 +11,7 @@ t = ly / Fs; % Tempo traccia
 M = 0.5; % Fattore di campionamento intervallo
 lint = Fs * M; % Numero di campioni per intervallo
 nint = t/M; % Numero di intervalli 
-n = (0:ly-1)/Fs; % Intervallo dei tempi normalizzato per andare da 0 a 30
+n = (0:ly-1)/Fs; % Intervallo dei tempi normalizzato per andare da 0 a 30 secondi
 ni = (0:lint-1)/Fs; % Come n ma per il singolo intervallo
 
 figure
@@ -25,16 +25,6 @@ title("Plot canzone");
 y = (y(:,1))'; % Traspongo perche boh sembra serva una riga per reshape
 x = reshape(y, lint, t/M); % Faccio la matrice tale che per ogni colonna ho un intervallo
 
-figure
-hold on
-plot(ni, x(:, 1)); % Adesso x va letto su tutta la colonna per i campioni
-title("Plot primo intervallo");
-
-figure
-hold on
-plot(linspace(0, (lint-1)/Fs, lint), sp); % Adesso x va letto su tutta la colonna per i campioni
-title("Plot spettro primo intervallo");
-
 
 % La fft trasforma una matrice per colonne, ovvero ogni colonna è vista 
 % come un segnale da un numero di campioni = alle righe
@@ -45,5 +35,12 @@ Xf = fft(x);
 % Quindi mi aspetto che lungo una colonna ci sia un segnale da trasformare
 Xd = dft(x);
 
-sXf = abs(Xf);
-sXd = abs(Xd);
+sXf = abs(Xf).^2; % Spettri degli intervalli fft
+sXd = abs(Xd).^2; % Spettri degli intervalli dft
+
+figure
+hold on
+plot(ni, sXf(:, 1), ni, sXd(:, 1));
+
+
+title("Spettri a confronto");

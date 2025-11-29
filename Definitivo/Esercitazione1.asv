@@ -6,12 +6,13 @@ clc
 % sua frequenza di campionamento
 [y, Fs] = audioread("Metallica - Fuel.wav", [1323001 2646000]);
 
-ly = length(y);
-t = ly / Fs;
+ly = length(y); % Numero totole di campioni della traccia
+t = ly / Fs; % Tempo traccia
 M = 0.5; % Fattore di campionamento intervallo
 lint = Fs * M; % Numero di campioni per intervallo
 nint = t/M; % Numero di intervalli 
-n = (0:ly-1)/Fs; % Intervallo normalizzato per andare da 0 a 30
+n = (0:ly-1)/Fs; % Intervallo dei tempi normalizzato per andare da 0 a 30
+ni = (0:lint-1)/Fs; % Come n ma per il singolo intervallo
 
 figure
 hold on
@@ -19,30 +20,10 @@ plot(n, y(:, 1));
 title("Plot canzone");
 
 
-
 % Reshape prende in ordine gli elementi degli array e li mette a matrice
 % completando per colonna (prima colonna 1, poi 2, ..., poi n)
 y = (y(:,1))'; % Traspongo perche boh sembra serva una riga per reshape
 x = reshape(y, lint, t/M); % Faccio la matrice tale che per ogni colonna ho un intervallo
-
-figure
-hold on
-plot(linspace(0, (lint-1)/Fs, lint), x(:, 1)); % Adesso x va letto su tutta la colonna per i campioni
-title("Plot primo intervallo");
-
-
-format long e
-ggg = linspace(0, (lint-1)/Fs, lint);
-fff = (0:lint-1)/Fs;
-lll = fff - ggg;
-sum(lll)
-
-z = abs(x(:, 1)); % Spettro di x
-
-figure
-hold on
-plot(linspace(0, (lint-1)/Fs, lint), z); % Adesso x va letto su tutta la colonna per i campioni
-title("Plot spettro primo intervallo");
 
 
 % La fft trasforma una matrice per colonne, ovvero ogni colonna è vista 
@@ -54,5 +35,10 @@ Xf = fft(x);
 % Quindi mi aspetto che lungo una colonna ci sia un segnale da trasformare
 Xd = dft(x);
 
+sXf = sum(abs(Xf).^2, 1); % Spettri degli intervalli fft
+sXd = sum(abs(Xd).^2, 1); % Spettri degli intervalli dft
 
-
+figure
+hold on
+plot(0:nint, sXf);
+title("Spettri a confronto");
