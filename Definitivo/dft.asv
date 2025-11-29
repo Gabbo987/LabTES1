@@ -19,10 +19,10 @@ function X = dft(x)
     k = 0:N-1;
     F = exp(-j*2*pi*n'*k/N);
     % Applico DFT lungo la dimensione desiderata
-    x = shiftdim(x, dim-1);   % porta la dimensione scelta davanti
-    X = F * x;               % moltiplicazione vettoriale
-    X = shiftdim(X, -(dim-1)); % ripristina il layout originale
+    X = shiftdim(X, dim-1);   % porta la dimensione scelta davanti
+    Xk = W * X;               % moltiplicazione vettoriale
+    Xk = shiftdim(Xk, -(dim-1)); % ripristina il layout originale
 
-    % Un applauso a chatgpt
+X = (F*x')';
 
 end

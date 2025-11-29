@@ -6,18 +6,18 @@ clc
 % sua frequenza di campionamento
 [y, Fs] = audioread("Metallica - Fuel.wav", [1323001 2646000]);
 
-ly = length(y); % Numero totole di campioni della traccia
-t = ly / Fs; % Tempo traccia
+ly = length(y);
+t = ly / Fs;
 M = 0.5; % Fattore di campionamento intervallo
 lint = Fs * M; % Numero di campioni per intervallo
 nint = t/M; % Numero di intervalli 
-n = (0:ly-1)/Fs; % Intervallo dei tempi normalizzato per andare da 0 a 30
-ni = (0:lint-1)/Fs; % Come n ma per il singolo intervallo
+n = (0:ly-1)/Fs; % Intervallo normalizzato per andare da 0 a 30
 
 figure
 hold on
 plot(n, y(:, 1));
 title("Plot canzone");
+
 
 
 % Reshape prende in ordine gli elementi degli array e li mette a matrice
@@ -27,12 +27,21 @@ x = reshape(y, lint, t/M); % Faccio la matrice tale che per ogni colonna ho un i
 
 figure
 hold on
-plot(ni, x(:, 1)); % Adesso x va letto su tutta la colonna per i campioni
+plot(linspace(0, (lint-1)/Fs, lint), x(:, 1)); % Adesso x va letto su tutta la colonna per i campioni
 title("Plot primo intervallo");
+
+
+format long e
+ggg = linspace(0, (lint-1)/Fs, lint);
+fff = (0:lint-1)/Fs;
+lll = fff - ggg;
+sum(lll)
+
+z = abs(x(:, 1)); % Spettro di x
 
 figure
 hold on
-plot(linspace(0, (lint-1)/Fs, lint), sp); % Adesso x va letto su tutta la colonna per i campioni
+plot(linspace(0, (lint-1)/Fs, lint), z); % Adesso x va letto su tutta la colonna per i campioni
 title("Plot spettro primo intervallo");
 
 
@@ -45,5 +54,5 @@ Xf = fft(x);
 % Quindi mi aspetto che lungo una colonna ci sia un segnale da trasformare
 Xd = dft(x);
 
-sXf = abs(Xf);
-sXd = abs(Xd);
+
+
