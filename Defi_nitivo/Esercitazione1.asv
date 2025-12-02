@@ -90,15 +90,15 @@ for i = 1:nint
     xlabel("Frequenza [kHz]")
     nome_spettro = sprintf('10*log(S_{X_{%d}}(f))', i);
     legend(nome_spettro, 'Location', 'best');
-    annotation('rectangle', [0 0 1 1], 'Color', 'b'); % Aggiunto per non far tagliare troppo i bordi da export
+    annotation('rectangle', [0 0 1 1], 'Color', 'r'); % Aggiunto per non far tagliare troppo i bordi da export
 
-    filename = sprintf("SpettroFFTLog%d.png", i);
+    filename = sprintf("SpettroDFTLog%d.png", i);
     exportgraphics(gcf, filename, "Resolution", 300);
 
     % plot e export spettri degli intervalli fft 
     figure
     hold on
-    plot(ni2, sXd(i, :), "Color", "r");
+    plot(ni2, sXd(i, :), "Color", "b");
     title(sprintf('%da Finestra [%s - %s], M=0.5', i, fmt(t_start), fmt(t_end)));
     subtitle("    ");
     ylabel("Energia ");
@@ -107,7 +107,7 @@ for i = 1:nint
     legend(nome_spettro, 'Location', 'best');
     annotation('rectangle', [0 0 1 1], 'Color', 'b');
 
-    filename = sprintf("SpettroFFT%d.png", i);
+    filename = sprintf("SpettroDFT%d.png", i);
     exportgraphics(gcf, filename, "Resolution", 300);
 
 end
