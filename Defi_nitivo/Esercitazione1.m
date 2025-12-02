@@ -8,7 +8,7 @@ clc
 
 ly = length(y); % Numero totole di campioni della traccia
 t = ly / Fs; % Tempo traccia
-M = 1; % Fattore di campionamento intervallo
+M = 0.5; % Fattore di campionamento intervallo
 lint = Fs * M; % Numero di campioni per intervallo
 nint = t/M; % Numero di intervalli 
 n = (0:ly-1)/Fs; % Intervallo dei tempi normalizzato per andare da 0 a 30 secondi
@@ -22,7 +22,7 @@ x = reshape(y, lint, nint)';
 X = zeros(nint, lint);
 Xt = zeros(nint, lint/2);
 
-for i=1:3
+for i=1:1
     X(i, :) = dft(x(i, :));
     Xt(i, :) = X(i, 1:lint/2);
 end
@@ -34,7 +34,7 @@ t0  = 30;
 fmt = @(t) sprintf('%02d:%04.1f', floor(t/60), t - 60*floor(t/60));
 ni2 = linspace(0, (lint/2)-1, lint/2)/1000;
 
-for i = 1:3
+for i = 1:1
     t_start = t0 + (i-1)*M;
     t_end   = t0 + i*M;
     
