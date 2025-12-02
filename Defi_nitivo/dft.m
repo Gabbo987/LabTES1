@@ -4,8 +4,7 @@ function X = dft(x)
     X = zeros(1, N);
     H = exp(-j*2*pi*n/N);
     for k=0:N-1
-        H = H.^k;
-        X(1, k+1) = H*x';
+        X(1, k+1) = (H.^k)*x';
     end
 
     X = X';

@@ -8,7 +8,7 @@ clc
 
 ly = length(y); % Numero totole di campioni della traccia
 t = ly / Fs; % Tempo traccia
-M = 0.5; % Fattore di campionamento intervallo
+M = 1; % Fattore di campionamento intervallo
 lint = Fs * M; % Numero di campioni per intervallo
 nint = t/M; % Numero di intervalli 
 n = (0:ly-1)/Fs; % Intervallo dei tempi normalizzato per andare da 0 a 30 secondi
@@ -19,42 +19,29 @@ ni = (0:lint-1)/Fs; % Come n ma per il singolo intervallo
 y = (y(:,1))'; % Traspongo perche boh sembra serva una riga per reshape
 x = reshape(y, lint, nint)';
 
-% Ho implementato la dft in modo da avere lo stesso comportamento
-% Quindi mi aspetto che lungo una colonna ci sia un segnale da trasformare
-
 X = zeros(nint, lint);
 Xt = zeros(nint, lint/2);
-XFFT = (fft(x'))';
-XFFTt = zeros(nint, lint/2);
 
-for i=1:nint
+for i=1:3
     X(i, :) = dft(x(i, :));
     Xt(i, :) = X(i, 1:lint/2);
-    XFFTt(i, :) = XFFT(i, 1:lint/2);
 end
 
-sXd = abs(Xt).^2; % Spettri degli intervalli dft
-sXd_dB = 10*log10(sXd); % Spettri degli intervalli dft scala logaritmica
-sXf = abs(XFFTt).^2; % Spettri degli intervalli fft
-sXf_dB = 10*log10(sXf); % Spettri degli intervalli fft scala logaritmica
+Xen = abs(Xt).^2; % Spettri degli intervalli dft
+XenLog = 10*log10(Xen);
 
-t0  = 30;      % tempo iniziale (30 s)
-
-
-% funzione formattazione tempo
+t0  = 30;
 fmt = @(t) sprintf('%02d:%04.1f', floor(t/60), t - 60*floor(t/60));
-ni2 = linspace(0, lint/2-1, lint/2)/1000;
+ni2 = linspace(0, (lint/2)-1, lint/2)/1000;
 
-for i = 1:nint
-    
+for i = 1:3
     t_start = t0 + (i-1)*M;
     t_end   = t0 + i*M;
     
     % plot e export spettri degli intervalli dft scala logaritmica
     figure
-    hold on
-    plot(ni2, sXd_dB(i, :), "Color", "b");
-    title(sprintf('%da Finestra [%s - %s], M=0.5', i, fmt(t_start), fmt(t_end)));
+    plot(ni2, XenLog(i, :), "Color", "b");
+    title(sprintf('%da Finestra [%s - %s], M=0.5, scala logaritimica', i, fmt(t_start), fmt(t_end)));
     subtitle("    ");
     ylabel("Energia [dB]");
     xlabel("Frequenza [kHz]")
@@ -67,9 +54,8 @@ for i = 1:nint
 
     % plot e export spettri degli intervalli dft
     figure
-    hold on
-    plot(ni2, sXd(i, :), "Color", "b");
-    title(sprintf('%da Finestra [%s - %s], M=0.5', i, fmt(t_start), fmt(t_end)));
+    plot(ni2, Xen(i, :), "Color", "b");
+    title(sprintf('%da Finestra [%s - %s], M=0.5, scala lineare', i, fmt(t_start), fmt(t_end)));
     subtitle("    ");
     ylabel("Energia ");
     xlabel("Frequenza [kHz]")
@@ -79,35 +65,4 @@ for i = 1:nint
 
     filename = sprintf("SpettroDFT%d.png", i);
     exportgraphics(gcf, filename, "Resolution", 300);
-
-    % plot e export spettri degli intervalli fft scala logaritmica
-    figure
-    hold on
-    plot(ni2, sXf_dB(i, :), "Color", "r");
-    title(sprintf('%da Finestra [%s - %s], M=0.5', i, fmt(t_start), fmt(t_end)));
-    subtitle("    ");
-    ylabel("Energia [dB]");
-    xlabel("Frequenza [kHz]")
-    nome_spettro = sprintf('10*log(S_{X_{%d}}(f))', i);
-    legend(nome_spettro, 'Location', 'best');
-    annotation('rectangle', [0 0 1 1], 'Color', 'b'); % Aggiunto per non far tagliare troppo i bordi da export
-
-    filename = sprintf("SpettroFFTLog%d.png", i);
-    exportgraphics(gcf, filename, "Resolution", 300);
-
-    % plot e export spettri degli intervalli fft 
-    figure
-    hold on
-    plot(ni2, sXd(i, :), "Color", "r");
-    title(sprintf('%da Finestra [%s - %s], M=0.5', i, fmt(t_start), fmt(t_end)));
-    subtitle("    ");
-    ylabel("Energia ");
-    xlabel("Frequenza [kHz]")
-    nome_spettro = sprintf('S_{X_{%d}}', i);
-    legend(nome_spettro, 'Location', 'best');
-    annotation('rectangle', [0 0 1 1], 'Color', 'b');
-
-    filename = sprintf("SpettroFFT%d.png", i);
-    exportgraphics(gcf, filename, "Resolution", 300);
-
 end
