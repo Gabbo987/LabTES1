@@ -16,7 +16,7 @@ ni = (0:lint-1)/Fs; % Come n ma per il singolo intervallo
 
 % Reshape prende in ordine gli elementi degli array e li mette a matrice
 % completando per colonna (prima colonna 1, poi 2, ..., poi n)
-y = (y(:,1))'; % Traspongo perche boh sembra serva una riga per reshape
+y = (y(:,1))'; 
 x = reshape(y, lint, nint)';
 
 X = zeros(nint, lint);
@@ -27,7 +27,7 @@ for i=1:1
     Xt(i, :) = X(i, 1:lint/2);
 end
 
-Xen = abs(Xt).^2; % Spettri degli intervalli dft
+Xen = abs(Xt).^2;
 XenLog = 10*log10(Xen);
 
 t0  = 30;
