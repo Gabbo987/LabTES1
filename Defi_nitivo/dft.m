@@ -6,7 +6,6 @@ function X = dft(x)
     for k=0:N-1
         H = W.^k;
         X(1, k+1) = H*x';
-        fprintf("%d\n", k);
     end
 
     X = X';
